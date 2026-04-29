@@ -6,6 +6,7 @@ platforms = ["osx-arm64"]
 version = "0.1.0"
 
 [tasks]
+generate-nanobodies = "python generate_nanobodies.py"
 
 [dependencies]
 openmm = ">=8.5.1,<9"
@@ -16,3 +17,8 @@ pytorch = ">=2.10.0,<3"
 
 [pypi-dependencies]
 immunebuilder = ">=1.2, <2"
+polars = ">=1.40.1, <2"
+immunum = ">=1.1.0, <2"
+typer = ">=0.25.0, <0.26"
+loguru = ">=0.7.3, <0.8"
+tqdm = ">=4.67.3, <5"
