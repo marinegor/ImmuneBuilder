@@ -22,21 +22,46 @@ To test the method out without installing it you can try this <a href="https://c
 
 ## Install
 
-### Using `pixi`
+### Using `pixi` (recommended)
 
-This package can be installed and ran using [`pixi`](https://pixi.prefix.dev/). In order to do that, clone repository and do
+This package can be installed and run using [`pixi`](https://pixi.prefix.dev/). Clone the repository, then install depending on your platform:
+
+#### macOS (Apple Silicon)
+
+```bash
+pixi install -e cpu
+```
+
+Run models with:
+
+```bash
+pixi run -e cpu NanoBodyBuilder2 --fasta_file test.fasta -v
+```
+
+#### Linux with NVIDIA GPU
+
+The default environment includes CUDA and GPU-accelerated PyTorch:
 
 ```bash
 pixi install
 ```
 
-Then models can be run with
+Run models with:
 
 ```bash
 pixi run NanoBodyBuilder2 --fasta_file test.fasta -v
 ```
 
-### Requirements
+To use the CPU-only environment on Linux instead:
+
+```bash
+pixi install -e cpu
+pixi run -e cpu NanoBodyBuilder2 --fasta_file test.fasta -v
+```
+
+### Manual install
+
+#### Requirements
 
 This package requires PyTorch. If you do not already have PyTorch installed, you can do so following these <a href="https://pytorch.org/get-started/locally/">instructions</a>.
 
@@ -53,9 +78,9 @@ It also uses anarci for trimming and numbering sequences. We recommend installin
 $ conda install -c bioconda anarci
 ```
 
-### Install ImmuneBuilder
+#### Install ImmuneBuilder
 
-Once you have all dependencies installed within one enviroment, you can install ImmuneBuilder via PyPI by doing:
+Once you have all dependencies installed within one environment, you can install ImmuneBuilder via PyPI by doing:
 
 ```bash
 $ pip install ImmuneBuilder
