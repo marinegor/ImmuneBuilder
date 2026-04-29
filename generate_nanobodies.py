@@ -45,6 +45,7 @@ def segment_and_deduplicate(path: str, sequence_col: str) -> pl.DataFrame:
 
     return (
         pl.scan_parquet(path)
+        .filter(pl.col(sequence_col).str.len_chars() >= 100)
         .with_columns(
             imp.segment(pl.col(sequence_col), chains=["H"], scheme="imgt").alias(
                 "segmented"
@@ -60,7 +61,12 @@ def segment_and_deduplicate(path: str, sequence_col: str) -> pl.DataFrame:
             pl.col("segmented").struct.field("cdr3"),
         )
         .drop("segmented")
-        .filter(pl.col("fr1").is_not_null())
+        .filter(
+            pl.col("fr1").is_not_null()
+            & pl.col("fr4").is_not_null()
+            & (pl.col("fr1").str.len_chars() > 0)
+            & (pl.col("fr4").str.len_chars() > 0)
+        )
         .unique(subset=["fr1", "fr2", "fr3", "fr4"])
         .collect()
     )
