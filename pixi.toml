@@ -2,7 +2,7 @@
 authors = ["Brennan Abanades Kenyon <brennan.abanadeskenyon@stx.ox.ac.uk>"]
 channels = ["conda-forge", "bioconda"]
 name = "ImmuneBuilder"
-platforms = ["osx-arm64"]
+platforms = ["osx-arm64", "linux-64"]
 version = "0.1.0"
 
 [tasks]
