@@ -311,11 +311,14 @@ def main(
     sequence_col: str = typer.Option(
         "Receptor Amino Acids", help="Column name containing sequences."
     ),
+    cuda: bool = typer.Option(
+        False, help="Use CUDA GPU acceleration via Ray (requires CUDA-capable GPU)."
+    ),
     num_workers: int = typer.Option(
-        4, help="Number of Ray GPU workers (only used when CUDA is available)."
+        2, help="Number of Ray GPU workers (only used with --cuda)."
     ),
     gpu_frac: float = typer.Option(
-        0.25, help="Fraction of GPU per Ray worker (only used when CUDA is available)."
+        0.5, help="Fraction of GPU per Ray worker (only used with --cuda)."
     ),
 ) -> None:
     """Generate nanobody structures from a parquet dataset."""
@@ -339,8 +342,14 @@ def main(
     output_dir = "generated"
     sequences = df[sequence_col].to_list()
 
-    if CUDA_AVAILABLE:
-        logger.info(f"CUDA available — using Ray with {num_workers} GPU workers")
+    use_cuda = cuda and CUDA_AVAILABLE
+    if cuda and not CUDA_AVAILABLE:
+        logger.warning(
+            "--cuda requested but CUDA is not available, falling back to CPU"
+        )
+
+    if use_cuda:
+        logger.info(f"Using Ray with {num_workers} GPU workers (gpu_frac={gpu_frac})")
         generate_structures_gpu(
             sequences,
             output_dir,
@@ -349,7 +358,7 @@ def main(
             gpu_frac_per_worker=gpu_frac,
         )
     else:
-        logger.info("CUDA not available — running sequentially on CPU")
+        logger.info("Running sequentially on CPU")
         generate_structures_cpu(sequences, output_dir, refinement=not no_refine)
 
     logger.info("Done!")
@@ -357,3 +366,4 @@ def main(
 
 if __name__ == "__main__":
     app()
+
